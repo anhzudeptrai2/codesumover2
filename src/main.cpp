@@ -291,7 +291,39 @@ void tactic_attackR()
     }
     else
     {
-      tactic_default();
+      if (filterValF() <= 40)
+      {
+        Serial.println("pushF");
+        PUSH();
+      }
+      else if (filterValR() <= 30)
+      {
+        Serial.println("pushR");
+        ROTATER();
+      }
+      else if (filterValL() <= 30)
+      {
+        Serial.println("pushL");
+        ROTATEL();
+      }
+      else if (filterValF() <= 30 && filterValR() <= 30)
+      {
+        Serial.println("chay ne diem mu phai");
+        RFORWARD();
+      }
+      else if (filterValF() <= 30 && filterValL() <= 30)
+      {
+        Serial.println("chay ne diem mu trai");
+        LFORWARD();
+      }
+      else if (filterValF() > 30 && filterValL() > 30 && filterValR() > 30)
+      {
+        BACKWARD();
+      }
+      else
+      {
+        ROTATEL();
+      }
     }
   }
 }
@@ -316,7 +348,39 @@ void tactic_attackL()
     }
     else
     {
-      tactic_default();
+      if (filterValF() <= 40)
+      {
+        Serial.println("pushF");
+        PUSH();
+      }
+      else if (filterValR() <= 30)
+      {
+        Serial.println("pushR");
+        ROTATER();
+      }
+      else if (filterValL() <= 30)
+      {
+        Serial.println("pushL");
+        ROTATEL();
+      }
+      else if (filterValF() <= 30 && filterValR() <= 30)
+      {
+        Serial.println("chay ne diem mu phai");
+        RFORWARD();
+      }
+      else if (filterValF() <= 30 && filterValL() <= 30)
+      {
+        Serial.println("chay ne diem mu trai");
+        LFORWARD();
+      }
+      else if (filterValF() > 30 && filterValL() > 30 && filterValR() > 30)
+      {
+        BACKWARD();
+      }
+      else
+      {
+        ROTATEL();
+      }
     }
   }
 }
@@ -356,6 +420,7 @@ void Button_Control()
   int val_K8 = digitalRead(button_K8);
   int val_K5 = digitalRead(button_K5);
   int val_K4 = digitalRead(button_K4);
+
   if (val_K6 == 0)
   {
     button_state = 6;
@@ -392,16 +457,19 @@ void setup()
   pinMode(IRL, INPUT);
   pinMode(IRB, INPUT);
   // SR
-  pinMode(trig1, OUTPUT);
+  pinMode(trig1, OUTPUT); // Phat
   pinMode(trig2, OUTPUT);
   pinMode(trig3, OUTPUT);
-  pinMode(echo1, INPUT);
+
+  pinMode(echo1, INPUT); // Nhan
   pinMode(echo2, INPUT);
   pinMode(echo3, INPUT);
   // nut bam
   pinMode(button_K6, INPUT_PULLUP);
   pinMode(button_K7, INPUT_PULLUP);
   pinMode(button_K8, INPUT_PULLUP);
+  pinMode(button_K5, INPUT_PULLUP);
+  pinMode(button_K4, INPUT_PULLUP);
   // ngat
   attachInterrupt(0, proval, RISING);
   attachInterrupt(1, proval, RISING);
@@ -410,59 +478,67 @@ void setup()
 
 void loop()
 {
-  read_SRF();
+  read_SRF(); //* doc cam bien SR
   read_SRL();
   read_SRR();
-  filterValF();
+
+  filterValF(); //* chay qua bo loc
   filterValL();
   filterValR();
   Button_Control();
-  if (button_state == 6)
+  if (button_state == 6) // Chay mu tan cong phai
   {
-    if (firstRun)
+    if (firstRun == true)
     {
       delay(2900);
       firstRun = false;
     }
-    tactic_attackR();
-    Serial.println("tan cong phai");
+    else
+    {
+      tactic_attackR();
+      Serial.println("tan cong phai");
+    }
   }
-  else if (button_state == 7)
+  else if (button_state == 7) // chay co ban < rcm>
   {
-    if (firstRun)
+    if (firstRun == true)
     {
       delay(2900);
       firstRun = false; //
     }
-    tactic_default();
-    Serial.println("chay mac dich");
+    else
+    {
+      tactic_default();
+      Serial.println("chay mac dich");
+    }
   }
-  else if (button_state == 8)
+  else if (button_state == 8) // Chay ne doi thu
   {
-    if (firstRun)
+    if (firstRun == true)
     {
       delay(2900);
       firstRun = false;
     }
-    tactic_defence();
-    Serial.println("Chay trien thuat phong ngu");
+    else
+    {
+      tactic_defence();
+      Serial.println("Chay trien thuat phong ngu");
+    }
   }
   else if (button_state == 5)
   {
     STOP();
   }
-  else if (button_state == 4)
+  else if (button_state == 4) // Chay mu tan cong trai
   {
-    delay(2900);
-    firstRun = false;
+    if (firstRun == true)
+    {
+      delay(2900);
+      firstRun = false;
+    }
+    else
+    {
+      tactic_attackL();
+    }
   }
-  tactic_attackL();
-  // IR
-  // Serial.print(distance1);
-  // Serial.println("cm");
-  // Serial.print(distance2);
-  // Serial.println("cm");
-  // Serial.print(distance3);
-  // Serial.println("cm");
-  // delay(1000);
 }

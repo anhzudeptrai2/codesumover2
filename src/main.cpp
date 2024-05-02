@@ -258,10 +258,6 @@ void tactic_default()
       Serial.println("chay ne diem mu trai");
       LFORWARD();
     }
-    else if (filterValF() > 30 && filterValL() > 30 && filterValR() > 30)
-    {
-      BACKWARD();
-    }
     else
     {
       ROTATEL();
@@ -316,10 +312,6 @@ void tactic_attackR()
         Serial.println("chay ne diem mu trai");
         LFORWARD();
       }
-      else if (filterValF() > 30 && filterValL() > 30 && filterValR() > 30)
-      {
-        BACKWARD();
-      }
       else
       {
         ROTATEL();
@@ -372,10 +364,6 @@ void tactic_attackL()
       {
         Serial.println("chay ne diem mu trai");
         LFORWARD();
-      }
-      else if (filterValF() > 30 && filterValL() > 30 && filterValR() > 30)
-      {
-        BACKWARD();
       }
       else
       {
